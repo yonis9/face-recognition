@@ -10,7 +10,9 @@ import Register from './components/Register/Register';
 import 'tachyons';
 import Particles from 'react-particles-js';
 import Clarifai from 'clarifai';
-import { app } from './ApiKey';
+import 'dotenv';
+
+const app = new Clarifai.App({apiKey: process.env.REACT_APP_API_KEY});
 
 
 const particleOptions = {
