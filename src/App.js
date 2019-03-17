@@ -35,6 +35,8 @@ constructor() {
   this.state= {
     input: '',
     imageUrl: '',
+    probability: 0,
+    celebrity: '',
     box: {},
     route: 'signin',
     isSignedIn: false,
@@ -79,6 +81,12 @@ onInputChange = (event) => {
   this.setState({input: event.target.value});
 }
 
+celebsDetection = (data) => {
+  const probability = Math.round(data.outputs[0].data.regions[0].data.face.identity.concepts[0].value *100);
+  const celebName =  data.outputs[0].data.regions[0].data.face.identity.concepts[0].name;
+  this.setState({ celebrity: celebName, probability: probability })
+}
+
 calculateFaceLocation = (data) => {
   const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
   const image = document.getElementById('inputimage');
@@ -118,12 +126,13 @@ onButtonSubmit = () => {
             .catch(console.log)
       }
     this.displayFaceBox(this.calculateFaceLocation(response))
+    this.celebsDetection(response)
     })
         .catch(err => console.log(err));
 }
 
   render() {
-    const { isSignedIn, box, imageUrl, route } = this.state;
+    const { isSignedIn, box, imageUrl, route, celebrity, probability } = this.state;
     return (
       <div className='App'>
        <Particles className='particles'
@@ -134,7 +143,7 @@ onButtonSubmit = () => {
           <Logo />
           <Rank name={this.state.user.name} entries={this.state.user.entries}/>
           <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit}/>
-          <FaceRecognition box={box} imageUrl={imageUrl}/>
+          <FaceRecognition box={box} imageUrl={imageUrl} celebrity={celebrity} probability={probability}/>
       </div>
         : (this.state.route ==='signin') 
         ? <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/> 
