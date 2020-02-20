@@ -82,8 +82,8 @@ onInputChange = (event) => {
 }
 
 celebsDetection = (data) => {
-  const probability = Math.round(data.outputs[0].data.regions[0].data.face.identity.concepts[0].value *100);
-  const celebName =  data.outputs[0].data.regions[0].data.face.identity.concepts[0].name;
+  const probability = Math.round(data.outputs[0].data.regions[0].data.concepts[0].value *100);
+  const celebName =  data.outputs[0].data.regions[0].data.concepts[0].name;
   this.setState({ celebrity: celebName, probability: probability })
 }
 
